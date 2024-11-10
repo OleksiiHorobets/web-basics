@@ -17,8 +17,7 @@ public class SwaggerConfig {
             addList("Bearer Authentication"))
         .components(new Components().addSecuritySchemes
             ("Bearer Authentication", createAPIKeyScheme()))
-        .info(new Info().title("CTP REST API")
-            .description("An API to access trending movies data, manage watch later lists, and rate movies.")
+        .info(new Info().title("Basic Auth Server")
             .version("0.1.0"));
   }
 
