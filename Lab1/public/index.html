@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+    <style>
+      body {
+        display: flex;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+      #login {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px;
+        background: #f0f0f0;
+        width: 30%;
+      }
+      #rooms {
+        width: 20%;
+        background: #f0f0f0;
+        padding: 10px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        display: none;
+      }
+      #chat {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+      }
+      #rooms ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      #rooms li {
+        padding: 10px;
+        cursor: pointer;
+      }
+      #rooms li.active {
+        background-color: #ddd;
+      }
+      #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        flex-grow: 1;
+        overflow-y: auto;
+      }
+      #messages li {
+        padding: 8px;
+        margin-bottom: 10px;
+        background: #f4f4f4;
+        border-radius: 5px;
+      }
+      .system {
+        font-style: italic;
+        color: gray;
+      }
+      #usernameDisplay {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="rooms">
+      <h3>Rooms</h3>
+      <ul id="roomsList"></ul>
+    </div>
+    <div id="chat">
+      <div id="usernameDisplay"></div>
+      <ul id="messages"></ul>
+      <form id="chatForm" style="display: none">
+        <input
+          id="messageInput"
+          autocomplete="off"
+          placeholder="Type a message..."
+        />
+        <button>Send</button>
+      </form>
+    </div>
+
+    <div id="login">
+      <label for="username">Username:</label>
+      <input type="text" id="username" placeholder="Enter username" />
+      <button id="joinChat">Join Chat</button>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      const roomsList = document.getElementById("roomsList");
+      const messages = document.getElementById("messages");
+      const messageInput = document.getElementById("messageInput");
+      const chatForm = document.getElementById("chatForm");
+      const usernameInput = document.getElementById("username");
+      const joinChat = document.getElementById("joinChat");
+      const login = document.getElementById("login");
+      const usernameDisplay = document.getElementById("usernameDisplay");
+      let currentRoom = "";
+
+      joinChat.addEventListener("click", () => {
+        const username = usernameInput.value.trim();
+        if (username) {
+          socket.emit("setUsername", username);
+          login.style.display = "none";
+          chatForm.style.display = "block";
+          usernameDisplay.textContent = `Logged in as: ${username}`;
+          document.getElementById("rooms").style.display = "block";
+          socket.emit("roomsList");
+        }
+      });
+
+      chatForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const msg = messageInput.value.trim();
+        if (msg) {
+          socket.emit("chatMessage", msg);
+          messageInput.value = "";
+        }
+      });
+
+      socket.on("chatMessage", (data) => {
+        const item = document.createElement("li");
+        item.textContent = `${data.username}: ${data.message}`;
+        if (data.username === "System") {
+          item.classList.add("system");
+        }
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+
+      socket.on("previousMessages", (msgs) => {
+        messages.innerHTML = "";
+        msgs.forEach((data) => {
+          const item = document.createElement("li");
+          item.textContent = `${data.username}: ${data.message}`;
+          if (data.username === "System") {
+            item.classList.add("system");
+          }
+          messages.appendChild(item);
+        });
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+
+      socket.on("roomsList", (rooms) => {
+        roomsList.innerHTML = "";
+        rooms.forEach((room) => {
+          const item = document.createElement("li");
+          item.textContent = room;
+          item.addEventListener("click", () => {
+            if (currentRoom !== room) {
+              currentRoom = room;
+              document
+                .querySelectorAll("#roomsList li")
+                .forEach((li) => li.classList.remove("active"));
+              item.classList.add("active");
+              socket.emit("joinRoom", {
+                username: usernameInput.value.trim(),
+                room,
+              });
+            }
+          });
+          roomsList.appendChild(item);
+        });
+      });
+    </script>
+  </body>
+</html>
