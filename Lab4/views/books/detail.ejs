@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Detail</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="navbar">
+      <a href="/">Home</a>
+      <a href="/books">Books</a>
+      <a href="/books/<%= book._id %>/edit">Edit</a>
+      <a href="/books">Back to List</a>
+    </div>
+
+    <div class="book-detail">
+      <h2><%= book.title %></h2>
+      <p><strong>Reader:</strong> <%= book.reader %></p>
+      <p>
+        <strong>Date of Issue:</strong> <%= book.date_of_issue.toDateString() %>
+      </p>
+      <p>
+        <strong>Return Date:</strong> <%= book.return_date.toDateString() %>
+      </p>
+      <a href="/books/<%= book._id %>/edit">Edit Book</a>
+    </div>
+  </body>
+</html>

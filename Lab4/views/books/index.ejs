@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Books</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="navbar">
+      <a href="/books">Books</a>
+      <a href="/books/new">Add New Book</a>
+    </div>
+    <h1>Books</h1>
+    <div class="container">
+      <ul>
+        <% books.forEach(book => { %>
+        <li>
+          <a href="/books/<%= book._id %>"><%= book.title %></a> (<%=
+          book.reader %>)
+          <form
+            action="/books/<%= book._id %>?_method=DELETE"
+            method="POST"
+            style="display: inline"
+          >
+            <button type="submit">Delete</button>
+          </form>
+        </li>
+        <% }); %>
+      </ul>
+    </div>
+  </body>
+</html>

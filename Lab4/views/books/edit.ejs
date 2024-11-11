@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Book</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="navbar">
+      <a href="/">Home</a>
+      <a href="/books">Books</a>
+    </div>
+
+    <div class="form-container">
+      <h2>Edit Book</h2>
+      <form
+        action="/books/<%= book._id %>?_method=PUT"
+        method="POST"
+        class="edit-form"
+      >
+        <input
+          type="text"
+          name="title"
+          value="<%= book.title %>"
+          placeholder="Title"
+          required
+        />
+        <input
+          type="text"
+          name="reader"
+          value="<%= book.reader %>"
+          placeholder="Reader"
+          required
+        />
+        <input
+          type="date"
+          name="date_of_issue"
+          value="<%= book.date_of_issue %>"
+          required
+        />
+        <input
+          type="date"
+          name="return_date"
+          value="<%= book.return_date %>"
+          required
+        />
+        <button type="submit">Update Book</button>
+      </form>
+    </div>
+  </body>
+</html>
