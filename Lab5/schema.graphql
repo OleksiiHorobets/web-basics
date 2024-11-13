@@ -1,0 +1,29 @@
+type Book {
+  id: ID!
+  title: String!
+  reader: String!
+  date_of_issue: String!
+  return_date: String!
+}
+
+type Query {
+  getBooks: [Book]
+  getBook(id: ID!): Book
+}
+
+type Mutation {
+  addBook(
+    title: String!
+    reader: String!
+    date_of_issue: String!
+    return_date: String!
+  ): Book
+  updateBook(
+    id: ID!
+    title: String
+    reader: String
+    date_of_issue: String
+    return_date: String
+  ): Book
+  deleteBook(id: ID!): Book
+}
