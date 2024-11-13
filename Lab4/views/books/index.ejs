@@ -16,8 +16,8 @@
       <ul>
         <% books.forEach(book => { %>
         <li>
-          <a href="/books/<%= book._id %>"><%= book.title %></a> (<%=
-          book.reader %>)
+          <a href="/books/<%= book._id %>"><%= book.title %></a>(<%= book.reader
+          %>)
           <form
             action="/books/<%= book._id %>?_method=DELETE"
             method="POST"
