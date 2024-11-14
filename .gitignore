@@ -5,3 +5,5 @@ node_modules/
 **/*.temp
 **/*.env
 **/logs/
+# Default ignored files
+**/.idea*
