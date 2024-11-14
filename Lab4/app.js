@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const bookRoutes = require("./routes/bookRoutes");
+const apiRoutes = require("./routes/bookApiRoutes");
 const path = require("path");
 const logger = require("./logger"); // Import the logger
 require("dotenv").config();
@@ -34,6 +35,7 @@ app.use((req, res, next) => {
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+app.use(apiRoutes);
 app.use(bookRoutes);
 
 app.use((err, req, res, next) => {
